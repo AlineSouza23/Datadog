@@ -1,480 +1,1116 @@
 import React, { useState } from "react";
-import { ChevronDown, ChevronRight, Search, ArrowLeft } from "lucide-react";
-import logo from "./datadog.svg"; // usado como background
 
-const data = [
-  {
-    folder: "COF",
-    dashboards: [
-      { name: "ACEITAÇÃO", link: "em desenvolvimento" },
-      { name: "Account Fee", link: "em desenvolvimento" },
-      { name: "Autorizado Pendete de Liquidado", link: "em desenvolvimento" },
-      { name: "BACEN", link: "em desenvolvimento" },
-      { name: "Liquidado Pendente Autorizado", link: "em desenvolvimento" },
-      {
-        name: "REJEIÇÃO",
-        link: "https://us3.datadoghq.com/dashboard/5c4-dtr-7f5?fromUser=true&refresh_mode=sliding&storage=hot&from_ts=1759847492250&to_ts=1760452292250&live=true",
-      },
-    ],
-  },
-  {
-    folder: "ELO",
-    dashboards: [
-      {
-        name: "ANÁLISE TRANSACIONAL",
-        link: "https://us3.datadoghq.com/dashboard/q4k-tx9-8pv/anlise-transacional?fromUser=false&refresh_mode=paused&from_ts=1759546800000&to_ts=1759633199999&live=false",
-      },
-      {
-        name: "Autorização - FN",
-        link: "https://us3.datadoghq.com/dashboard/hbh-87d-x7a?fromUser=true&refresh_mode=sliding&storage=flex_tier&from_ts=1757501520759&to_ts=1757502420759&live=true",
-      },
-      {
-        name: "Autorização - Ajuda ai",
-        link: "https://us3.datadoghq.com/dashboard/naf-s34-4ua/autorizao---ajuda-ai?fromUser=false&refresh_mode=paused&from_ts=1759546800000&to_ts=1759633199999&live=false",
-      },
-      {
-        name: "3DS - Autenticação",
-        link: "https://us3.datadoghq.com/dashboard/dqt-ne4-cpv/3ds---autenticao?fromUser=false&refresh_mode=sliding&from_ts=1757500669883&to_ts=1757504269883&live=true",
-      },
-      {
-        name: "3DS",
-        link: "https://us3.datadoghq.com/dashboard/tga-uui-vkt/3ds?fromUser=false&refresh_mode=paused&from_ts=1760410800000&to_ts=1760497199999&live=false",
-      },
-      {
-        name: "Disputas",
-        link: "https://us3.datadoghq.com/dashboard/dke-dtn-iek/disputas?fromUser=false&refresh_mode=sliding&from_ts=1757853861369&to_ts=1760445861369&live=true",
-      },
-      {
-        name: "Análise Transacional Pefisa",
-        link: "https://us3.datadoghq.com/dashboard/xr6-5y7-ek9/anlise-transacional-pefisa?fromUser=false&refresh_mode=sliding&from_ts=1759934337863&to_ts=1759937937863&live=true",
-      },
-      {
-        name: "ADVICE STAND IN - FN",
-        link: "https://us3.datadoghq.com/dashboard/xr6-5y7-ek9?fromUser=false&refresh_mode=sliding&from_ts=1759914516148&to_ts=1759918116148&live=true",
-      },
-      {
-        name: "ATAQUE FORÇA BRUTA - FN",
-        link: "https://us3.datadoghq.com/dashboard/7fg-css-qma/ataque-fora-bruta---fn?fromUser=false&refresh_mode=paused&from_ts=1758510000000&to_ts=1758596399999&live=false",
-      },
-      {
-        name: "Companhias Aéreas - Internacionais",
-        link: "https://us3.datadoghq.com/dashboard/yi3-cax-n6t/companhias-areas---internacionais?fromUser=false&refresh_mode=paused&from_ts=1760929200000&to_ts=1761015599999&live=false",
-      },
-      {
-        name: "Companhias Aéreas - Nacionais",
-        link: "https://us3.datadoghq.com/dashboard/pkj-jjw-3rf?fromUser=false&refresh_mode=sliding&from_ts=1759936812683&to_ts=1759937712683&live=true",
-      },
-      {
-        name: "Detalhamento transações",
-        link: "https://us3.datadoghq.com/dashboard/jus-c3s-evv?fromUser=false&refresh_mode=paused&storage=hot&from_ts=1760842800000&to_ts=1760929199999&live=false",
-      },
-      {
-        name: "PREVENÇÃO A FRAUDE | Áquila",
-        link: "https://us3.datadoghq.com/dashboard/82y-vfr-yhi/preveno-a-fraude--aquila?fromUser=false&refresh_mode=paused&from_ts=1758682800000&to_ts=1758769199999&live=false",
-      },
-      {
-        name: "Provisionamento Produtos Digitais",
-        link: "https://us3.datadoghq.com/dashboard/ysk-e86-a8c/provisionamento-produtos-digitais---alma?fromUser=false&refresh_mode=sliding&storage=flex_tier&from_ts=1757496423933&to_ts=1757500023933&live=true",
-      },
-      {
-        name: "REDE DE SEGURANÇA",
-        link: "https://us3.datadoghq.com/dashboard/y5n-9mq-xjt?fromUser=false&refresh_mode=paused&from_ts=1759201200000&to_ts=1759287599999&live=false",
-      },
-      {
-        name: "Impacto Financeiro - FN",
-        link: "https://us3.datadoghq.com/dashboard/fsb-wn9-32v/impacto-financeiro---fn-correto?fromUser=false&refresh_mode=sliding&storage=hot&tpl_var_Emissor%5B0%5D=Pernambucanas-0985&from_ts=1761138514115&to_ts=1761142114115&live=true",
-      },
-      {
-        name: "STAND IN ELO",
-        link: "https://us3.datadoghq.com/dashboard/crm-p3r-73i/stand-in-elo?fromUser=false&refresh_mode=paused&from_ts=1757930170968&to_ts=1757949933789&live=false",
-      },
-      {
-        name: "Pernambucanas v3 (compartilhada)",
-        link: "https://us3.datadoghq.com/dashboard/pyk-w9y-k5m/pernambucanas-v3-compartilhada?fromUser=false&refresh_mode=paused&from_ts=1760324400000&to_ts=1760410799999&live=false",
-      },
-    ],
-  },
-  {
-    folder: "Banese",
-    dashboards: [
-      {
-        name: "Autorização BANESE - FN (compartilhado)",
-        link: "https://us3.datadoghq.com/dashboard/aex-xd9-i7q?fromUser=false&refresh_mode=sliding&storage=hot&from_ts=1760312253366&to_ts=1760315853366&live=true",
-      },
-    ],
-  },
-  {
-    folder: "Caixa",
-    dashboards: [
-      {
-        name: "Autorização Caixa - FN (compartilhado)",
-        link: "https://us3.datadoghq.com/dashboard/8yt-zxx-t9t/autorizao-caixa---fn-compartilhado?fromUser=false&refresh_mode=sliding&tile_focus=556262361263361&from_ts=1757498093627&to_ts=1757501693627&live=true",
-      },
-    ],
-  },
-  {
-    folder: "Vox",
-    dashboards: [
-      {
-        name: "Autorização Vox - FN (compartilhado)",
-        link: "https://us3.datadoghq.com/dashboard/53n-cxp-ki3/autorizao-vox---fn-compartilhado?fromUser=false&refresh_mode=sliding&from_ts=1761138072199&to_ts=1761141672199&live=true",
-      },
-    ],
-  },
-  {
-    folder: "Impacto Financeiro",
-    dashboards: [
-      {
-        name: "Autorização Impacto Financeiro",
-        link: "https://us3.datadoghq.com/dashboard/fsb-wn9-32v/impacto-financeiro---fn-correto?fromUser=false&refresh_mode=sliding&storage=hot&tpl_var_Emissor%5B0%5D=Pernambucanas-0985&from_ts=1761138514115&to_ts=1761142114115&live=true",
-      },
-    ],
-  },
-  {
-    folder: "Produção TI",
-    dashboards: [
-      { name: "Principais Ofensores", link: "em desenvolvimento" },
-      {
-        name: "TELÃO Tokenização",
-        link: "https://us3.datadoghq.com/dashboard/ji5-ze5-cw5?fromUser=true&refresh_mode=sliding&storage=hot&from_ts=1761063476190&to_ts=1761063776190&live=true",
-      },
-    ],
-  },
-  {
-    folder: "Produção TI | CCE",
-    dashboards: [
-      { name: "Checklist", link: "em desenvolvimento" },
-      { name: "GERADOR de DESFAZIMENTO", link: "em desenvolvimento" },
-      {
-        name: "Provisionamento / VISÃO COMMAND CENTER",
-        link: "https://us3.datadoghq.com/dashboard/atc-ukb-wx9/provisionamento-viso-cce?fromUser=false&refresh_mode=paused&storage=hot&from_ts=1760324400000&to_ts=1760410799999&live=false",
-      },
-      {
-        name: "TELÃO | Credenciadores",
-        link: "https://us3.datadoghq.com/dashboard/4pf-ipt-uzr/telo--credenciadores?fromUser=false&refresh_mode=sliding&tile_focus=365812824300089&from_ts=1757500478820&to_ts=1757504078820&live=true",
-      },
-      {
-        name: "TELÃO | Emissores V2",
-        link: "https://us3.datadoghq.com/dashboard/kmk-kj7-ctu/telo--emissores-v2?fromUser=false&refresh_mode=sliding&from_ts=1757500499532&to_ts=1757504099532&live=true",
-      },
-      {
-        name: "TELÃO | IMPACTOS TRANSACIONAIS",
-        link: "https://us3.datadoghq.com/dashboard/64u-h6s-a4u?fromUser=true&refresh_mode=paused&from_ts=1760324400000&to_ts=1760410799999&live=false",
-      },
-      {
-        name: "TELÃO | IMPACTOS TRANSACIONAIS AWS",
-        link: "https://us3.datadoghq.com/dashboard/3et-jvs-5hm/telo-impactos-transacionais-aws?fromUser=false&refresh_mode=paused&storage=hot&from_ts=1760324400000&to_ts=1760410799999&live=false",
-      },
-      { name: "TELÃO | IMPACTOS TRANSACIONAIS RISE", link: "em desenvolvimento" },
-    ],
-  },
-  {
-    folder: "Release",
-    dashboards: [
-      {
-        name: "Release 25.2",
-        link: "https://us3.datadoghq.com/dashboard/cf6-sfg-vrw/release-252?fromUser=false&refresh_mode=paused&from_ts=1759201200000&to_ts=1759287599999&live=false",
-      },
-    ],
-  },
-  {
-    folder: "Squad Monitoria",
-    dashboards: [
-      { name: "LOGIN PARCEIROS", link: "em desenvolvimento" },
-      { name: "Monitoria RPA", link: "em desenvolvimento" },
-      { name: "Parcelado em aberto de Liquidação", link: "em desenvolvimento" },
-      { name: "Reap fora do prazo", link: "em desenvolvimento" },
-    ],
-  },
-];
+const logPaths = {
+  Autorização: "service:autorizacao-kafka-parser-mensageria AVRO env:prd",
+  Liquidação: "em desenvolvimento",
+  Standin: "service:standin-consumidor-autorizacao env:prd",
+  Advice: "service:standin-consumidor-advice \"TRANSACAO PERSISTIDA COM SUCESSO \" env:prd ",
+};
 
-function App() {
-  const [search, setSearch] = useState("");
-  const [openFolders, setOpenFolders] = useState({});
-  const [showLogin, setShowLogin] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState("");
-  const [pass, setPass] = useState("");
-  const [error, setError] = useState("");
+const campos = {
+Autorização: [
+  { grupo: "BIT22", itens: ["@Bit22capacidadePIN", "@Bit22codigoModoEntrada", "@Bit22modoEntrada"] },
+  { grupo: "BIT43", itens: ["@Bit43Estabelecimento", "@Bit43codigoPais", "@Bit43Cidade", "@Bit43Pais"] },
 
-  const toggleFolder = (folder) => {
-    setOpenFolders((prev) => ({ ...prev, [folder]: !prev[folder] }));
-  };
+  { grupo: "BIT46", itens: [
+    "@Bit46respostaAVS","@Bit46resultadoCVE2","@Bit46fonteAutorizacao","@Bit46floorLimit","@Bit46campoErro",
+    "@Bit46mudancaEndereco","@Bit46resultadoCVE","@Bit46resultadoCriptograma","@Bit46resultadoTVR","@Bit46resultadoCVR",
+    "@Bit46nomePortador","@Bit46numeroCobranca","@Bit46nomeCobranca","@Bit46cidadeCobranca","@Bit46cobrancaUF",
+    "@Bit46emailCobranca","@Bit46telefoneCobranca1","@Bit46telefoneCobranca2","@Bit46telefoneCobranca3",
+    "@Bit46padraoEnderecoCobranca","@Bit46respostaCAVV"
+  ]},
 
-  const handleLogin = () => {
-    if (user === "COEMONITORIA" && pass === "MonitoriaAutomacao") {
-      setLoggedIn(true);
-      setShowLogin(false);
-      setError("");
-      setUser("");
-      setPass("");
-    } else {
-      setError("Usuário ou senha incorretos!");
-    }
-  };
+  { grupo: "BIT54", itens: ["@Bit54tipoConta","@Bit54tipoValor","@Bit54codigoMoeda","@Bit54indicativoPlataforma","@Bit54valor"] },
 
-  const handleLogout = () => {
-    setLoggedIn(false);
-    setOpenFolders({});
-  };
+  { grupo: "BIT58", itens: ["@Bit58enderecoRua","@Bit58cep","@Bit58codigoPais","@Bit58numeroLoja","@Bit58nomeShopping"] },
 
-  const filteredData = data
-    .filter((folder) => {
-      // Esconder parceiros se não estiver logado
-      if (!loggedIn && ["Banese", "Caixa", "Vox"].includes(folder.folder)) return false;
-      return true;
-    })
-    .map((folder) => ({
-      ...folder,
-      dashboards: folder.dashboards.filter((d) =>
-        d.name.toLowerCase().includes(search.toLowerCase())
+  { grupo: "BIT60", itens: [
+    "@Bit60tipoTerminal","@Bit60AprovacaoParcial","@Bit60localizacaoTerminal","@Bit60presencaPortador",
+    "@Bit60codigoPresencaCartao","@Bit60capacidadeCapturaCartao","@Bit60codigoStatusTransacao",
+    "@Bit60segurancaTransacao","@Bit60reservadoZerado","@Bit60codigoTipoPOS","@Bit60capacidadeEntrada",
+    "@Bit60condicaoEspecial","@Bit60reservadoZerado2","@Bit60presencaCartao","@Bit60statusTransacao","@Bit60tipoPOS"
+  ]},
+
+  { grupo: "BIT122", itens: [
+    "@Bit122tipoAutenticacao1","@Bit122formatoTLV","@Bit122tipoAutenticacao2",
+    "@Bit122codigoResultadoAutenticacao3DS","@Bit122segundoFatorAutenticacao","@Bit122chaveCAVV",
+    "@Bit122valorCAVV","@Bit122numeroImprevisivel","@Bit122rastreamentoAutenticacao","@Bit122versaoAcao",
+    "@Bit122acaoAutenticacao","@Bit122enderecoIP","@Bit122tipoAutenticacao3","@Bit122atc",
+    "@Bit122indicadorChaveCAVV","@Bit122outputCVE2","@Bit122numeroImprevisivelInApp",
+    "@Bit122rastreamentoAutenticacaoInapp","@Bit122versaoAcaoInapp","@Bit122acaoAutenticacaoInapp",
+    "@Bit122RUF","@Bit122tipoAutenticacao4","@Bit122atcTokenizada","@Bit122indicadorChaveTAVV",
+    "@Bit122TAVV","@Bit122numeroImprevisivelTokenizada","@Bit122rastreamentoAutenticacaoTokenizada",
+    "@Bit122RUFtokenizada"
+  ]},
+
+  { grupo: "BIT124", itens: [
+    "@Bit124condicaoDadosTransacao","@Bit124produtoCartao","@Bit124indicadorChipParcial","@Bit124indicadorRemocao",
+    "@Bit124indicadorHostCapture","@Bit124scoreCredenciador","@Bit124scoreELO","@Bit124reservadoZerado",
+    "@Bit124motivoPrimarioFraude","@Bit124motivoSecundarioFraude","@Bit124motivoTerciarioFraude","@Bit124decisaoFraude",
+    "@Bit124origemScore","@Bit124recomendacaoListaRestritiva","@Bit124recomendacaoindiceConfianca",
+    "@Bit124recomendacaoRegraAtaque","@Bit124recomendacaoMonitoriaAtiva","@Bit124reservadoZerado2",
+    "@Bit124indicadorAprovacaoJogos","@Bit124indicadorContaComprometida","@Bit124dataComprometimento",
+    "@Bit124totalViolacoesConfirmadas","@Bit124tipoComprometimento","@Bit124identificadorComprometimento"
+  ]},
+
+  // REMAPPERS
+  { grupo: "BIT02", itens: ["@Bit02pan"] },
+
+  { grupo: "BIT03", itens: [
+    "@Bit03codigoProcesso","@Bit03codigoContaOrigem","@Bit03contaOrigem","@Bit03tipoContaDestino","@Bit03processo"
+  ]},
+
+  { grupo: "BIT04", itens: ["@Bit04","@Bit04valorTransacao"] },
+  { grupo: "BIT05", itens: ["@Bit05valorMoedaLiquidacao"] },
+  { grupo: "BIT06", itens: ["@Bit06valorFaturaPortador"] },
+  { grupo: "BIT07", itens: ["@Bit07dataHoraTransmissao"] },
+  { grupo: "BIT08", itens: ["@Bit08taxaFaturaPortador"] },
+  { grupo: "BIT09", itens: ["@Bit09conversaoMoedaLiquidacao"] },
+  { grupo: "BIT10", itens: ["@Bit10conversaoFaturaPortador"] },
+  { grupo: "BIT11", itens: ["@Bit11stan"] },
+
+  { grupo: "BIT13_12", itens: ["@bit1213dataHoraTransacao"] },
+
+  { grupo: "BIT14", itens: ["@Bit14ValidadeCartao"] },
+  { grupo: "BIT15", itens: ["@Bit15dataLiquidacao"] },
+  { grupo: "BIT16", itens: ["@Bit16dataConversaoMoeda"] },
+
+  { grupo: "BIT18", itens: ["@Bit18codigoMCC","@Bit18MCC"] },
+
+  { grupo: "BIT19", itens: ["@Bit19codigoPais"] },
+
+  { grupo: "BIT23", itens: ["@Bit23sequenciaCartao"] },
+
+  { grupo: "BIT24", itens: ["@Bit24codigoFuncao","@Bit24funcao"] },
+
+  { grupo: "BIT25", itens: ["@Bit25codigoMotivoMensagem"] },
+
+  { grupo: "BIT26", itens: ["@Bit26capturaPIN"] },
+
+  { grupo: "BIT28", itens: ["@Bit28taxaTransacao"] },
+
+  { grupo: "BIT29", itens: ["@Bit29taxaMoedaLiquidacao"] },
+
+  { grupo: "BIT30", itens: ["@Bit30"] },
+
+  { grupo: "BIT32", itens: ["@Bit32codigoCredenciador","@Bit32Credenciador"] },
+
+  { grupo: "BIT33", itens: ["@Bit33instituicaoRepasse"] },
+
+  { grupo: "BIT35", itens: ["@Bit35trilha2Cartao"] },
+  { grupo: "BIT36", itens: ["@Bit36trilha3Cartao"] },
+
+  { grupo: "BIT37", itens: ["@Bit37nsu"] },
+
+  { grupo: "BIT38", itens: ["@Bit38codigoAutorizacao"] },
+
+  { grupo: "BIT39", itens: ["@Bit39classificacaoCodigoResposta","@Bit39codigoResposta","@Bit39resposta"] },
+
+  { grupo: "BIT40", itens: ["@Bit40"] },
+
+  { grupo: "BIT41", itens: ["@Bit41codigoTerminal"] },
+
+  { grupo: "BIT42", itens: ["@Bit42mid"] },
+
+  { grupo: "BIT47", itens: [
+    "@Bit47identificacaoPedido","@Bit47parcelasAmortizacao","@Bit47parcelasCarencia","@Bit47periodicidadeAmortizacao",
+    "@Bit47periodicidadeCarencia","@Bit47taxaJurosAmortizacao","@Bit47taxaJurosCarencia","@Bit47transacaoTokenizada"
+  ]},
+
+  { grupo: "BIT48", itens: [
+    "@Bit48CNPJ","@Bit48codigoProduto","@Bit48Marca","@Bit48Produto","@Bit48quemResponde"
+  ]},
+
+  { grupo: "BIT49", itens: ["@Bit49codigoMoeda"] },
+
+  { grupo: "BIT50", itens: ["@Bit50codigoMoedaLiquidacao"] },
+
+  { grupo: "BIT51", itens: ["@Bit51moedaFaturaPortador"] },
+
+  { grupo: "BIT53", itens: ["@Bit53controleSeguranca"] },
+
+  { grupo: "BIT56", itens: ["@Bit56dadosPortador"] },
+
+  { grupo: "BIT59", itens: ["@Bit59dadosTransporte"] },
+
+  { grupo: "BIT61", itens: ["@Bit61"] },
+
+  { grupo: "BIT62", itens: [
+    "@Bit62dadosTransacaoOnline", "@Bit62codigoAutenticacao", "@Bit62cnpjRaizComprador",
+    "@Bit62cnpjFilialComprador", "@Bit62cnpjDigitoComprador", "@Bit62cpfComprador",
+    "@Bit62cpfDigitoComprador", "@Bit62idComercioEletronico", "@Bit62eci"
+  ]},
+
+  { grupo: "BIT63", itens: ["@Bit63"] },
+
+  { grupo: "BIT80", itens: [
+    "@Bit80dataTransacao","@Bit80codigoTipoTransacao","@Bit80codigoPaisTerminal",
+    "@Bit80valorAutorizadoTransacao","@Bit80contadorTransacaoIncremental"
+  ]},
+
+  { grupo: "BIT89", itens: ["@Bit89"] },
+
+  { grupo: "BIT90", itens: ["@Bit90transacaoOriginal"] },
+
+  { grupo: "BIT95", itens: ["@Bit95"] },
+
+  { grupo: "BIT104", itens: [
+    "@Bit104numeroIdentificadorSubcredenciador","@Bit104numeroEcSubcredenciador",
+    "@Bit104numeroCpfCnpjPortadorCartao","@Bit104nomePortadorCartao"
+  ]},
+
+  { grupo: "BIT105", itens: ["@Bit105"] },
+
+  { grupo: "BIT106", itens: [
+    "@Bit106conjuntoDados61Tag01","@Bit106conjuntoDados61Tag02","@Bit106conjuntoDados61Tag04",
+    "@Bit106conjuntoDados61Tag05","@Bit106conjuntoDados61Tag06","@Bit106conjuntoDados61Tag07",
+    "@Bit106conjuntoDados61Tag08","@Bit106conjuntoDados61Tag09","@Bit106conjuntoDados61Tag10",
+    "@Bit106conjuntoDados61Tag11","@Bit106conjuntoDados61Tag12","@Bit106conjuntoDados61Tag13",
+    "@Bit106conjuntoDados61Tag14","@Bit106conjuntoDados61Tag15","@Bit106conjuntoDados61Tag16",
+    "@Bit106conjuntoDados61Tag18","@Bit106conjuntoDados61Tag19","@Bit106conjuntoDados64Tag01",
+    "@Bit106conjuntoDados64Tag02","@Bit106conjuntoDados68Tag01","@Bit106conjuntoDados68Tag02",
+    "@Bit106conjuntoDados68Tag03","@Bit106conjuntoDados68Tag04","@Bit106conjuntoDados68Tag05",
+    "@Bit106conjuntoDados68Tag06","@Bit106conjuntoDados68Tag07","@Bit106conjuntoDados68Tag08",
+    "@Bit106conjuntoDados68Tag09"
+  ]},
+
+  { grupo: "BIT107", itens: [
+    "@Bit107conjuntoDados57Tag01","@Bit107conjuntoDados57Tag02","@Bit107conjuntoDados57Tag03",
+    "@Bit107conjuntoDados57Tag04","@Bit107conjuntoDados57Tag05","@Bit107conjuntoDados57Tag06",
+    "@Bit107conjuntoDados57Tag07","@Bit107conjuntoDados57Tag08","@Bit107conjuntoDados57Tag09",
+    "@Bit107conjuntoDados57Tag10","@Bit107conjuntoDados57Tag11","@Bit107conjuntoDados57TagE0",
+    "@Bit107conjuntoDados57TagE1","@Bit107conjuntoDados57TagE2","@Bit107conjuntoDados57TagE3",
+    "@Bit107conjuntoDados57TagE4","@Bit107conjuntoDados57TagE5","@Bit107conjuntoDados57TagE6",
+    "@Bit107conjuntoDados57TagE7","@Bit107conjuntoDados57TagE8","@Bit107conjuntoDados57TagF1",
+    "@Bit107conjuntoDados57TagF2","@Bit107conjuntoDados57TagF3"
+  ]},
+
+  { grupo: "BIT111", itens: ["@Bit111"] },
+
+  { grupo: "BIT113", itens: ["@Bit113"] },
+
+  { grupo: "BIT114", itens: ["@Bit114"] },
+
+  { grupo: "BIT121", itens: ["@Bit121"] },
+
+  { grupo: "BIT123", itens: ["@Bit123"] },
+
+  { grupo: "BIT125", itens: ["@Bit125"] },
+
+  { grupo: "BIT126", itens: ["@Bit126","@Bit126CVE2"] },
+
+  { grupo: "BIT127", itens: ["@Bit127versaoMensageria"] },
+
+  // CAMPOS ADICIONAIS
+  { grupo: "dadosAdicionaisMensagem", itens: [
+    "@codigoBandeira","@codigoCredenciadora","@Credenciador","@codigoEmissor","@Emissor",
+    "@codigoMensagemComplementar","@maquinaStratus","@tipoSituacaoTransacao","@tipoTransacao",
+    "@origemInformacao","@indicadorCapturador","@indicadorToken","@bin","@finalCartao","@cartaoCriptografado",
+    "@hashCartaoCriptografado","@indicadorCartaoDigitalCaixa","@servicosEmv.codigoServicoARQC",
+    "@servicosEmv.indicadorValidacaoARQC","@nrid","@indicadorTokenizacaoCpfBit48",
+    "@indicadorTokenizacaoCnpjBit48","@indicadorTokenizacaoCpfBit104","@indicadorTokenizacaoCnpjBit104",
+    "@indicadorTokenizacaoRazaoSocial","@indicadorTransacaoAfe","@transacaoInternacional",
+    "@indicadorBinTamanhoSeis","@tipoFinanciamentoTransacao","@idAutorizacaoTransacao",
+    "@idChaveHsm","@razaoSocialEstComercial"
+  ]},
+
+  { grupo: "dadosComplementaresPulse", itens: [
+    "@Diners.mti","@Diners.Bit003","@Diners.Bit012","@Diners.Bit022","@Diners.Bit024",
+    "@Diners.Bit032","@Diners.Bit033","@Diners.Bit043","@Diners.Bit055","@Diners.Bit092"
+  ]},
+
+  { grupo: "dadosComplementaresStratus", itens: [
+    "@Stratus.dataHoraAutorizacao","@Stratus.versaoMensageriaEmissor","@Stratus.deParaOrigemBit60"
+  ]}
+],
+
+  Liquidação: [],
+  Standin: [
+
+  // =========================
+  // GERAL
+  // =========================
+  {
+    grupo: "GERAL",
+    itens: [
+      "@date", "@level", "@pid", "@application", "@executor", "@nomePod",
+      "@traceId", "@spanId", "@mti", "@bin", "@numeroCartao",
+      "@valorTransacao", "@nsu", "@mcc", "@modoEntrada", "@codigoCredenciadora",
+      "@codigoAutorizacao", "@dataHoraEvento", "@transacaoId", "@hashCartao",
+      "@situacaoEnvio", "@dataHoraTransacao", "@codigoBandeira", "@codigoEmissor",
+      "@codigoProcessadora", "@situacaoCompra", "@statusEnvioReversao", "@cdPrdEmsr",
+      "@afe", "@nrid", "@plataforma", "@region", "@motivo",
+      "@regraUtilizada", "@nomeClasse", "@message"
+    ]
+  },
+
+  // =========================
+  // BIT03
+  // =========================
+  { grupo: "BIT03", itens: ["@Bit03CodigoProcessamento"] },
+
+  // =========================
+  // BIT05
+  // =========================
+  { grupo: "BIT05", itens: ["@Bit05"] },
+
+  // =========================
+  // BIT06
+  // =========================
+  { grupo: "BIT06", itens: ["@Bit06"] },
+
+  // =========================
+  // BIT07
+  // =========================
+  { grupo: "BIT07", itens: ["@Bit07"] },
+
+  // =========================
+  // BIT08
+  // =========================
+  { grupo: "BIT08", itens: ["@Bit08TaxaValorFaturaPortador"] },
+
+  // =========================
+  // BIT09
+  // =========================
+  { grupo: "BIT09", itens: ["@Bit09TaxaConversaoMoedaLocal"] },
+
+  // =========================
+  // BIT10
+  // =========================
+  { grupo: "BIT10", itens: ["@Bit10TaxaConversaoFaturaPortador"] },
+
+  // =========================
+  // BIT12
+  // =========================
+  { grupo: "BIT12", itens: ["@Bit12HoraLocalTransacao"] },
+
+  // =========================
+  // BIT13
+  // =========================
+  { grupo: "BIT13", itens: ["@Bit13DataLocalTransacao"] },
+
+  // =========================
+  // BIT14
+  // =========================
+  { grupo: "BIT14", itens: ["@Bit14DataValidadeCartao"] },
+
+  // =========================
+  // BIT15
+  // =========================
+  { grupo: "BIT15", itens: ["@Bit15DataLiquidacao"] },
+
+  // =========================
+  // BIT16
+  // =========================
+  { grupo: "BIT16", itens: ["@Bit16DataConversaoMoeda"] },
+
+  // =========================
+  // BIT19
+  // =========================
+  { grupo: "BIT19", itens: ["@Bit19CodigoPaisCredenciadora"] },
+
+  // =========================
+  // BIT23
+  // =========================
+  { grupo: "BIT23", itens: ["@Bit23NumeroSequenciaCartao"] },
+
+  // =========================
+  // BIT24
+  // =========================
+  { grupo: "BIT24", itens: ["@Bit24CodigoFuncao"] },
+
+  // =========================
+  // BIT25
+  // =========================
+  { grupo: "BIT25", itens: ["@Bit25CodigoMotivoMensagem"] },
+
+  // =========================
+  // BIT26
+  // =========================
+  { grupo: "BIT26", itens: ["@Bit26CodigoCapturaPinPOS"] },
+
+  // =========================
+  // BIT28
+  // =========================
+  { grupo: "BIT28", itens: ["@Bit28ValorTaxaTransacao"] },
+
+  // =========================
+  // BIT29
+  // =========================
+  { grupo: "BIT29", itens: ["@Bit29ValorTaxaMoedaLiquidacao"] },
+
+  // =========================
+  // BIT33
+  // =========================
+  { grupo: "BIT33", itens: ["@Bit33CodigoInstituicaoRepasse"] },
+
+  // =========================
+  // BIT35
+  // =========================
+  { grupo: "BIT35", itens: ["@Bit35Trilha02Cartao"] },
+
+  // =========================
+  // BIT36
+  // =========================
+  { grupo: "BIT36", itens: ["@Bit36Trilha03Cartao"] },
+
+  // =========================
+  // BIT37
+  // =========================
+  { grupo: "BIT37", itens: ["@Bit37NsuRedeCaptura"] },
+
+  // =========================
+  // BIT39
+  // =========================
+  { grupo: "BIT39", itens: ["@Bit39CodigoResposta"] },
+
+  // =========================
+  // BIT41
+  // =========================
+  { grupo: "BIT41", itens: ["@Bit41IdentificacaoTerminal"] },
+
+  // =========================
+  // BIT42
+  // =========================
+  { grupo: "BIT42", itens: ["@Bit42CodigoEstabelecimento"] },
+
+  // =========================
+  // BIT43
+  // =========================
+  { grupo: "BIT43", itens: ["@Bit43NomeEstabelecimento"] },
+
+  // =========================
+  // BIT45
+  // =========================
+  { grupo: "BIT45", itens: ["@Bit45Trilha01Cartao"] },
+
+  // =========================
+  // BIT46
+  // =========================
+  { grupo: "BIT46", itens: ["@Bit46InformacoesAdicionaisResposta"] },
+
+  // =========================
+  // BIT47
+  // =========================
+  { grupo: "BIT47", itens: ["@Bit47DadosAdicionaisNacionais"] },
+
+  // =========================
+  // BIT48
+  // =========================
+  { grupo: "BIT48", itens: ["@Bit48InformacoesAdicionais"] },
+
+  // =========================
+  // BIT49
+  // =========================
+  { grupo: "BIT49", itens: ["@Bit49CodigoMoeda"] },
+
+  // =========================
+  // BIT50
+  // =========================
+  { grupo: "BIT50", itens: ["@Bit50CodigoMoedaLiquidacao"] },
+
+  // =========================
+  // BIT51
+  // =========================
+  { grupo: "BIT51", itens: ["@Bit51CodigoMoedaFaturaPortador"] },
+
+  // =========================
+  // BIT52
+  // =========================
+  { grupo: "BIT52", itens: ["@Bit52DadosPin"] },
+
+  // =========================
+  // BIT53
+  // =========================
+  { grupo: "BIT53", itens: ["@Bit53InformacaoControleSeguranca"] },
+
+  // =========================
+  // BIT54
+  // =========================
+  { grupo: "BIT54", itens: ["@Bit54ValoresAdicionais"] },
+
+  // =========================
+  // BIT55
+  // =========================
+  { grupo: "BIT55", itens: ["@Bit55CodificacaoInformacoesEmv"] },
+
+  // =========================
+  // BIT56
+  // =========================
+  { grupo: "BIT56", itens: ["@Bit56DadosRelacionadosPortador"] },
+
+  // =========================
+  // BIT58
+  // =========================
+  { grupo: "BIT58", itens: ["@Bit58DadosGeograficos"] },
+
+  // =========================
+  // BIT59
+  // =========================
+  { grupo: "BIT59", itens: ["@Bit59DadosTransporte"] },
+
+  // =========================
+  // BIT60
+  // =========================
+  { grupo: "BIT60", itens: ["@Bit60DadosAdicionaisTerminal"] },
+
+  // =========================
+  // BIT62
+  // =========================
+  { grupo: "BIT62", itens: ["@Bit62DadosIdentificarTransacoesOnline"] },
+
+  // =========================
+  // BIT63
+  // =========================
+  { grupo: "BIT63", itens: ["@Bit63ServicoVerificacaoEnderecoAVS"] },
+
+  // =========================
+  // BIT90
+  // =========================
+  { grupo: "BIT90", itens: ["@Bit90DadosTransacaoOriginal"] },
+
+  // =========================
+  // BIT95
+  // =========================
+  { grupo: "BIT95", itens: ["@Bit95"] },
+
+  // =========================
+  // BIT104
+  // =========================
+  { grupo: "BIT104", itens: ["@Bit104DadosTransacoesEspecificas03"] },
+
+  // =========================
+  // BIT105
+  // =========================
+  { grupo: "BIT105", itens: ["@Bit105DadosTransacoesEspecificas02"] },
+
+  // =========================
+  // BIT106
+  // =========================
+  { grupo: "BIT106", itens: ["@Bit106DadosTransacionais"] },
+
+  // =========================
+  // BIT107
+  // =========================
+  { grupo: "BIT107", itens: ["@Bit107DadosTransacoesEspecificas"] },
+
+  // =========================
+  // BIT121
+  // =========================
+  { grupo: "BIT121", itens: ["@Bit121BlocoSecundarioPin"] },
+
+  // =========================
+  // BIT122
+  // =========================
+  { grupo: "BIT122", itens: ["@Bit122DadosAdicionaisAutenticacao"] },
+
+  // =========================
+  // BIT123
+  // =========================
+  { grupo: "BIT123", itens: ["@Bit123CampoPromocional"] },
+
+  // =========================
+  // BIT124
+  // =========================
+  { grupo: "BIT124", itens: ["@Bit124QualificadorTransacoes"] },
+
+  // =========================
+  // BIT125
+  // =========================
+  { grupo: "BIT125", itens: ["@Bit125CampoParaUsoPersonalizado"] },
+
+  // =========================
+  // BIT126
+  // =========================
+  { grupo: "BIT126", itens: ["@Bit126IdentificadorCartaoCVE2"] },
+
+  // =========================
+  // BIT127
+  // =========================
+  { grupo: "BIT127", itens: ["@Bit127IndicadorVersao"] }
+
+],
+
+  Advice: [
+
+  // =========================
+  // GERAL
+  // =========================
+  {
+    grupo: "GERAL",
+    itens: [
+      "@date", "@level", "@pid", "@application", "@executor", "@nomePod",
+      "@traceId", "@spanId", "@tipoMensagemBit0", "@bin", "@numeroCartao",
+      "@nsu", "@dataHoraEvento", "@id", "@hashCartao", "@situacaoEnvio",
+      "@flagEspelho", "@codigoEmissor", "@cdPrEmsr", "@Bit48TransacaoAfe",
+      "@nrid", "@plataforma", "@codigoBandeira", "@region", "@motivo",
+      "@codigoRegraUtilizada", "@nomeClasse", "@message"
+    ]
+  },
+
+  // =========================
+  // BIT03
+  // =========================
+  { grupo: "BIT03", itens: ["@Bit03CodigoProcessamento"] },
+
+  // =========================
+  // BIT04
+  // =========================
+  { grupo: "BIT04", itens: ["@Bit04ValorTransacao"] },
+
+  // =========================
+  // BIT05
+  // =========================
+  { grupo: "BIT05", itens: ["@Bit05"] },
+
+  // =========================
+  // BIT06
+  // =========================
+  { grupo: "BIT06", itens: ["@Bit06"] },
+
+  // =========================
+  // BIT07
+  // =========================
+  { grupo: "BIT07", itens: ["@Bit07DataHoraTransmissao"] },
+
+  // =========================
+  // BIT08
+  // =========================
+  { grupo: "BIT08", itens: ["@Bit08TaxaValorFaturaPortador"] },
+
+  // =========================
+  // BIT09
+  // =========================
+  { grupo: "BIT09", itens: ["@Bit09TaxaConversaoMoedaLocalParaMoedaLiquidacao"] },
+
+  // =========================
+  // BIT10
+  // =========================
+  { grupo: "BIT10", itens: ["@Bit10TaxaConversaoFaturaPortador"] },
+
+  // =========================
+  // BIT12
+  // =========================
+  { grupo: "BIT12", itens: ["@Bit12HoraLocalTransacao"] },
+
+  // =========================
+  // BIT13
+  // =========================
+  { grupo: "BIT13", itens: ["@Bit13DataLocalTransacao"] },
+
+  // =========================
+  // BIT14
+  // =========================
+  { grupo: "BIT14", itens: ["@Bit14DataValidadeCartao"] },
+
+  // =========================
+  // BIT15
+  // =========================
+  { grupo: "BIT15", itens: ["@Bit15DataLiquidacao"] },
+
+  // =========================
+  // BIT16
+  // =========================
+  { grupo: "BIT16", itens: ["@Bit16DataConversaoMoeda"] },
+
+  // =========================
+  // BIT18
+  // =========================
+  { grupo: "BIT18", itens: ["@Bit18Mcc"] },
+
+  // =========================
+  // BIT19
+  // =========================
+  { grupo: "BIT19", itens: ["@Bit19CodigoPais"] },
+
+  // =========================
+  // BIT22
+  // =========================
+  { grupo: "BIT22", itens: ["@Bit22ModoEntrada"] },
+
+  // =========================
+  // BIT23
+  // =========================
+  { grupo: "BIT23", itens: ["@Bit23NumeroSequenciaCartao"] },
+
+  // =========================
+  // BIT24
+  // =========================
+  { grupo: "BIT24", itens: ["@Bit24CodigoFuncao"] },
+
+  // =========================
+  // BIT25
+  // =========================
+  { grupo: "BIT25", itens: ["@Bit25CodigoMotivoMensagem"] },
+
+  // =========================
+  // BIT26
+  // =========================
+  { grupo: "BIT26", itens: ["@Bit26CodigoCapturaPinPOS"] },
+
+  // =========================
+  // BIT28
+  // =========================
+  { grupo: "BIT28", itens: ["@Bit28ValorTaxaTransacao"] },
+
+  // =========================
+  // BIT29
+  // =========================
+  { grupo: "BIT29", itens: ["@Bit29ValorTaxaMoedaLiquidacao"] },
+
+  // =========================
+  // BIT32
+  // =========================
+  { grupo: "BIT32", itens: ["@Bit32Credenciador"] },
+
+  // =========================
+  // BIT33
+  // =========================
+  { grupo: "BIT33", itens: ["@Bit33CodigoInstituicaoRepasse"] },
+
+  // =========================
+  // BIT35
+  // =========================
+  { grupo: "BIT35", itens: ["@Bit35Trilha02Cartao"] },
+
+  // =========================
+  // BIT36
+  // =========================
+  { grupo: "BIT36", itens: ["@Bit36Trilha03Cartao"] },
+
+  // =========================
+  // BIT37
+  // =========================
+  { grupo: "BIT37", itens: ["@Bit37Nsu"] },
+
+  // =========================
+  // BIT38
+  // =========================
+  { grupo: "BIT38", itens: ["@Bit38CodigoAutorizacao"] },
+
+  // =========================
+  // BIT39
+  // =========================
+  { grupo: "BIT39", itens: ["@Bit39CodigoResposta"] },
+
+  // =========================
+  // BIT41
+  // =========================
+  { grupo: "BIT41", itens: ["@Bit41CodigoTerminal"] },
+
+  // =========================
+  // BIT42
+  // =========================
+  { grupo: "BIT42", itens: ["@Bit42CodigoEC"] },
+
+  // =========================
+  // BIT43
+  // =========================
+  { grupo: "BIT43", itens: ["@Bit43Estabelecimento"] },
+
+  // =========================
+  // BIT45
+  // =========================
+  { grupo: "BIT45", itens: ["@Bit45Trilha01Cartao"] },
+
+  // =========================
+  // BIT46
+  // =========================
+  { grupo: "BIT46", itens: ["@Bit46InformacoesAdicionaisResposta"] },
+
+  // =========================
+  // BIT47
+  // =========================
+  { grupo: "BIT47", itens: ["@Bit47DadosAdicionaisNacionais"] },
+
+  // =========================
+  // BIT48
+  // =========================
+  { grupo: "BIT48", itens: ["@Bit48InformacoesAdicionais", "@Bit48TransacaoAfe"] },
+
+  // =========================
+  // BIT49
+  // =========================
+  { grupo: "BIT49", itens: ["@Bit49CodigoMoeda"] },
+
+  // =========================
+  // BIT50
+  // =========================
+  { grupo: "BIT50", itens: ["@Bit50CodigoMoedaLiquidacao"] },
+
+  // =========================
+  // BIT51
+  // =========================
+  { grupo: "BIT51", itens: ["@Bit51CodigoMoedaFaturaPortador"] },
+
+  // =========================
+  // BIT52
+  // =========================
+  { grupo: "BIT52", itens: ["@Bit52DadosPin"] },
+
+  // =========================
+  // BIT53
+  // =========================
+  { grupo: "BIT53", itens: ["@Bit53InformacaoControleRelacionadaSeguranca"] },
+
+  // =========================
+  // BIT54
+  // =========================
+  { grupo: "BIT54", itens: ["@Bit54ValoresAdicionais"] },
+
+  // =========================
+  // BIT55
+  // =========================
+  { grupo: "BIT55", itens: ["@Bit55CodificacaoInformacoesEmv"] },
+
+  // =========================
+  // BIT56
+  // =========================
+  { grupo: "BIT56", itens: ["@Bit56DadosRelacionadosPortador"] },
+
+  // =========================
+  // BIT58
+  // =========================
+  { grupo: "BIT58", itens: ["@Bit58DadosGeograficos"] },
+
+  // =========================
+  // BIT59
+  // =========================
+  { grupo: "BIT59", itens: ["@Bit59DadosTransporte"] },
+
+  // =========================
+  // BIT60
+  // =========================
+  { grupo: "BIT60", itens: ["@Bit60DadosAdicionaisTerminal"] },
+
+  // =========================
+  // BIT62
+  // =========================
+  { grupo: "BIT62", itens: ["@Bit62DadosParaIdentificarTransacoesOnline"] },
+
+  // =========================
+  // BIT63
+  // =========================
+  { grupo: "BIT63", itens: ["@Bit63ServicoVerificacaoEnderecoAVS"] },
+
+  // =========================
+  // BIT90
+  // =========================
+  { grupo: "BIT90", itens: ["@Bit90DadosParaIdentificarTransacaoOriginal"] },
+
+  // =========================
+  // BIT95
+  // =========================
+  { grupo: "BIT95", itens: ["@Bit95"] },
+
+  // =========================
+  // BIT104
+  // =========================
+  { grupo: "BIT104", itens: ["@Bit104DadosTransacoesEspecificas03"] },
+
+  // =========================
+  // BIT105
+  // =========================
+  { grupo: "BIT105", itens: ["@Bit105DadosTransacoesEspecificas02"] },
+
+  // =========================
+  // BIT106
+  // =========================
+  { grupo: "BIT106", itens: ["@Bit106DadosTransacionais"] },
+
+  // =========================
+  // BIT107
+  // =========================
+  { grupo: "BIT107", itens: ["@Bit107DadosTransacoesEspecificas"] },
+
+  // =========================
+  // BIT121
+  // =========================
+  { grupo: "BIT121", itens: ["@Bit121BlocoSecundarioPin"] },
+
+  // =========================
+  // BIT122
+  // =========================
+  { grupo: "BIT122", itens: ["@Bit122DadosAdicionaisAutenticacao"] },
+
+  // =========================
+  // BIT123
+  // =========================
+  { grupo: "BIT123", itens: ["@Bit123CampoPromocional"] },
+
+  // =========================
+  // BIT124
+  // =========================
+  { grupo: "BIT124", itens: ["@Bit124Score"] },
+
+  // =========================
+  // BIT125
+  // =========================
+  { grupo: "BIT125", itens: ["@Bit125CampoParaUsoPersonalizado"] },
+
+  // =========================
+  // BIT126
+  // =========================
+  { grupo: "BIT126", itens: ["@Bit126IdentificadorCartaoCVE2"] },
+
+  // =========================
+  // BIT127
+  // =========================
+  { grupo: "BIT127", itens: ["@Bit127IndicadorVersao"] }
+
+],
+
+};
+
+export default function App() {
+  const [selected, setSelected] = useState(null);
+  const [searchTop, setSearchTop] = useState("");
+  const [searchFields, setSearchFields] = useState("");
+
+  const menuOptions = ["Autorização", "Liquidação", "Standin", "Advice"];
+
+  const handleCopy = (text) => navigator.clipboard.writeText(text);
+
+  const filteredMenu = menuOptions.filter((option) =>
+    option.toLowerCase().includes(searchTop.toLowerCase())
+  );
+
+  const filteredGroups =
+    selected &&
+    campos[selected].map((group) => ({
+      ...group,
+      itens: group.itens.filter((item) =>
+        item.toLowerCase().includes(searchFields.toLowerCase())
       ),
-    }))
-    .filter(
-      (folder) =>
-        folder.folder.toLowerCase().includes(search.toLowerCase()) ||
-        folder.dashboards.length > 0
-    );
+    }));
+
+  const gradientBtn = {
+    background: "linear-gradient(90deg, rgb(47, 71, 190), rgb(186, 106, 228))",
+    padding: "12px 20px",
+    borderRadius: "10px",
+    border: "none",
+    color: "white",
+    cursor: "pointer",
+    fontWeight: "bold",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+    transition: "transform 0.15s ease",
+  };
+
+  const buttonClickAnimation = (e) => {
+    e.target.style.transform = "scale(0.92)";
+    setTimeout(() => {
+      e.target.style.transform = "scale(1)";
+    }, 150);
+  };
 
   return (
-    <div style={styles.page}>
-      {/* Header */}
-      <header style={styles.header}>
-        <div style={styles.headerOverlay}>
-          {!loggedIn ? (
-            <button style={styles.loginButton} onClick={() => setShowLogin(true)}>
-              Login Monitoria
-            </button>
-          ) : (
-            <button style={styles.backButton} onClick={handleLogout}>
-              <ArrowLeft size={20} />
-              <span>Voltar</span>
-            </button>
-          )}
-          <h1 style={styles.title}>Dashboards</h1>
-        </div>
-      </header>
-
-      {/* Campo de busca */}
-      <div style={styles.searchContainer}>
-        <div style={styles.searchBox}>
-          <Search style={styles.searchIcon} size={20} />
-          <input
-            type="text"
-            placeholder="Pesquisar dashboards..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={styles.searchInput}
-          />
-        </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "white",
+        color: "#5c2d91",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      {/* HEADER */}
+      <div
+        style={{
+          width: "100%",
+          padding: "25px 0",
+          textAlign: "center",
+          background: "linear-gradient(90deg, rgb(47, 71, 190), rgb(186, 106, 228))",
+          color: "white",
+          fontSize: "26px",
+          fontWeight: "bold",
+          marginBottom: "30px",
+        }}
+      >
+        Pesquisa de Campos
       </div>
 
-      {/* Lista de pastas */}
-      <div style={styles.content}>
-        {filteredData.map((folder) => (
-          <div key={folder.folder} style={styles.folderContainer}>
-            <button onClick={() => toggleFolder(folder.folder)} style={styles.folderButton}>
-              <span>{folder.folder}</span>
-              {openFolders[folder.folder] ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
-            </button>
-            {openFolders[folder.folder] && (
-              <div style={styles.dashboardList}>
-                {folder.dashboards.map((d) => (
-                  <a
-                    key={d.name}
-                    href={d.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={styles.dashboardLink}
-                  >
-                    {d.name}
-                  </a>
-                ))}
-              </div>
+      {/* PRIMEIRA TELA */}
+      {!selected && (
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <div style={{ position: "relative", width: "60%", margin: "0 auto" }}>
+            <input
+              value={searchTop}
+              onChange={(e) => setSearchTop(e.target.value)}
+              placeholder="Pesquisar..."
+              style={{
+                padding: "10px 40px 10px 15px",
+                width: "100%",
+                borderRadius: "8px",
+                border: "2px solid #5c2d91",
+                outline: "none",
+                color: "black",
+                fontSize: "16px",
+              }}
+            />
+
+            {/* Ícone de lupa */}
+            <span
+              style={{
+                position: "absolute",
+                right: "12px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                fontSize: "20px",
+                color: "#5c2d91",
+              }}
+            >
+              
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "20px",
+              flexWrap: "wrap",
+              marginTop: "30px",
+            }}
+          >
+            {filteredMenu.map((t) => (
+              <button
+                key={t}
+                onClick={(e) => {
+                  buttonClickAnimation(e);
+                  setSelected(t);
+                  setSearchFields("");
+                }}
+                style={gradientBtn}
+              >
+                {t}
+              </button>
+            ))}
+
+            {filteredMenu.length === 0 && (
+              <p style={{ color: "#5c2d91", fontWeight: "bold" }}>
+                Nenhum resultado encontrado
+              </p>
             )}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
-      {/* Modal de Login */}
-      {showLogin && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalBox}>
-            <h2 style={{ marginBottom: "16px" }}>Login Monitoria</h2>
+      {/* SEGUNDA TELA */}
+      {selected && (
+        <div style={{ padding: "20px" }}>
+          <button
+            onClick={(e) => {
+              buttonClickAnimation(e);
+              setSelected(null);
+            }}
+            style={{ ...gradientBtn, marginBottom: "20px" }}
+          >
+            ← Voltar
+          </button>
+
+          <h2 style={{ color: "#5c2d91" }}>{selected}</h2>
+
+          {/* Barra de pesquisa */}
+          <div style={{ position: "relative", width: "60%", marginTop: "10px" }}>
             <input
-              type="text"
-              placeholder="Usuário"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-              style={styles.input}
+              value={searchFields}
+              onChange={(e) => setSearchFields(e.target.value)}
+              placeholder="Pesquisar campo..."
+              style={{
+                padding: "10px 40px 10px 15px",
+                width: "100%",
+                borderRadius: "8px",
+                border: "2px solid #5c2d91",
+                outline: "none",
+                color: "black",
+                fontSize: "16px",
+              }}
             />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-              style={styles.input}
-            />
-            {error && <p style={styles.error}>{error}</p>}
-            <button onClick={handleLogin} style={styles.modalButton}>
-              Entrar
-            </button>
-            <button onClick={() => setShowLogin(false)} style={styles.modalCancel}>
-              Cancelar
-            </button>
+
+            {/* Ícone de lupa */}
+            <span
+              style={{
+                position: "absolute",
+                right: "12px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                fontSize: "20px",
+                color: "#5c2d91",
+              }}
+            >
+              
+            </span>
+          </div>
+
+          {/* Caminho do log */}
+          <div style={{ marginTop: "20px" }}>
+            <strong style={{ color: "#5c2d91" }}>Caminho do log:</strong>
+            <div
+              style={{
+                marginTop: "8px",
+                padding: "10px",
+                background: "#ddd",
+                borderRadius: "8px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                color: "black",
+              }}
+            >
+              <span>{logPaths[selected]}</span>
+              <button
+                onClick={(e) => {
+                  buttonClickAnimation(e);
+                  handleCopy(logPaths[selected]);
+                }}
+                style={{ ...gradientBtn, padding: "6px 12px" }}
+              >
+                Copiar
+              </button>
+            </div>
+          </div>
+
+          {/* Grupos */}
+          <div style={{ marginTop: "20px" }}>
+            {filteredGroups.map((group, gIndex) =>
+              group.itens.length > 0 ? (
+                <div key={gIndex} style={{ marginBottom: "25px" }}>
+                  <h3 style={{ color: "#5c2d91", marginBottom: "10px" }}>
+                    {group.grupo}:
+                  </h3>
+
+                  {group.itens.map((campo, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        padding: "10px",
+                        background: "#e6e6e6",
+                        borderRadius: "8px",
+                        marginBottom: "8px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        color: "black",
+                      }}
+                    >
+                      <span>{campo}</span>
+
+                      <button
+                        onClick={(e) => {
+                          buttonClickAnimation(e);
+                          handleCopy(campo);
+                        }}
+                        style={{ ...gradientBtn, padding: "6px 12px" }}
+                      >
+                        Copiar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null
+            )}
           </div>
         </div>
       )}
     </div>
   );
 }
-
-/* 🎨 Estilos */
-const styles = {
-  page: {
-    fontFamily: "'Inter', sans-serif",
-    backgroundColor: "#fff",
-    minHeight: "100vh",
-  },
-  header: {
-    position: "relative",
-    height: "220px",
-    backgroundColor: "#5c2d91",
-    backgroundImage: `url(${logo})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "white",
-  },
-  headerOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "linear-gradient(90deg, rgb(47, 71, 190), rgb(186, 106, 228))",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-  },
-  title: { fontSize: "2rem", fontWeight: "600", zIndex: 1 },
-  loginButton: {
-    position: "absolute",
-    top: 16,
-    right: 20,
-    backgroundColor: "white",
-    color: "#5c2d91",
-    border: "none",
-    borderRadius: "8px",
-    padding: "8px 14px",
-    cursor: "pointer",
-    fontWeight: 500,
-  },
-  backButton: {
-    position: "absolute",
-    top: 16,
-    left: 20,
-    backgroundColor: "white",
-    color: "#5c2d91",
-    border: "none",
-    borderRadius: "8px",
-    padding: "8px 14px",
-    cursor: "pointer",
-    fontWeight: 500,
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-  },
-  searchContainer: { maxWidth: "700px", margin: "24px auto 0", padding: "0 16px" },
-  searchBox: {
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "#f0e6ff",
-    borderRadius: "12px",
-    padding: "8px 12px",
-  },
-  searchIcon: { color: "#5c2d91", marginRight: "8px" },
-  searchInput: { flex: 1, border: "none", outline: "none", background: "transparent", fontSize: "1rem" },
-  content: { maxWidth: "700px", margin: "24px auto", padding: "0 16px" },
-  folderContainer: {
-    border: "1px solid #e0d6f7",
-    borderRadius: "12px",
-    marginBottom: "12px",
-    overflow: "hidden",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-  },
-  folderButton: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#f5edff",
-    color: "#5c2d91",
-    border: "none",
-    padding: "12px 16px",
-    fontSize: "1.1rem",
-    fontWeight: "500",
-    cursor: "pointer",
-  },
-  dashboardList: { backgroundColor: "white", borderTop: "1px solid #e0d6f7" },
-  dashboardLink: {
-    display: "block",
-    padding: "10px 20px",
-    color: "#333",
-    textDecoration: "none",
-    transition: "background 0.2s",
-  },
-  /* Modal */
-  modalOverlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "rgba(0,0,0,0.4)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  modalBox: {
-    backgroundColor: "white",
-    padding: "24px",
-    borderRadius: "12px",
-    width: "320px",
-    display: "flex",
-    flexDirection: "column",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-  },
-  input: {
-    marginBottom: "10px",
-    padding: "10px",
-    borderRadius: "6px",
-    border: "1px solid #ccc",
-    fontSize: "1rem",
-  },
-  modalButton: {
-    backgroundColor: "#5c2d91",
-    color: "white",
-    padding: "10px",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "500",
-    marginBottom: "8px",
-  },
-  modalCancel: {
-    backgroundColor: "#ddd",
-    color: "#333",
-    padding: "10px",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
-  error: { color: "red", fontSize: "0.9rem", marginBottom: "10px" },
-};
-
-export default App;
