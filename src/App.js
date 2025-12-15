@@ -5,6 +5,8 @@ const logPaths = {
   Liquidação: "service:liquidacao-kafka-parser-mensageria env:prd ",
   Standin: "service:standin-consumidor-autorizacao env:prd",
   Advice: "service:standin-consumidor-advice \"TRANSACAO PERSISTIDA COM SUCESSO \" env:prd ",
+  HubQRCode: "service:qr-code-v2-kafka-parser-mensageria env:prd ",
+  "3DS-Autenticação":"service:rpa env:prd",
 };
 
 const campos = {
@@ -244,7 +246,7 @@ Autorização: [
     "@indicadorTokenizacaoCpfBit104","@indicadorTokenizacaoCnpjBit104",
     "@indicadorTokenizacaoRazaoSocial","@indicadorTransacaoAfe","@transacaoInternacional",
     "@indicadorBinTamanhoSeis","@tipoFinanciamentoTransacao","@idAutorizacaoTransacao",
-    "@idChaveHsm","@razaoSocialEstComercial"
+    "@idChaveHsm","@razaoSocialEstComercial","@site"
   ]},
 
   { grupo: "dadosComplementaresPulse", itens: [
@@ -1066,6 +1068,82 @@ Autorização: [
   { grupo: "BIT127", itens: ["@Bit127IndicadorVersao"] }
 
 ],
+HubQRCode: [
+  {
+    grupo: "HubQRCode",
+    itens: [
+      "@CarteiraDigital",
+      "@codigoCarteiraDigital",
+      "@codigoCredenciador",
+      "@codigoErro",
+      "@codigoErroInteiro",
+      "@codigoHash",
+      "@codigoProduto",
+      "@codigoTransacao",
+      "@Credenciador",
+      "@DataTransacao",
+      "@dtCreated",
+      "@finalCodigoErro",
+      "@hostname",
+      "@MensagemErro",
+      "@MID",
+      "@Moeda",
+      "@PanHash",
+      "@Parcelas",
+      "@Produto",
+      "@qrCodeTransactionId",
+      "@service",
+      "@Status",
+      "@Terminal",
+      "@TipoTokenizacao",
+      "@TipoTransacao",
+      "@Valor",
+      "@Versao"
+    ]
+  }
+],
+"3DS-Autenticação": [
+  {
+    grupo: "3DS-Autenticação",
+    itens: [
+      "@3DSMethodCompletionInd",
+      "@3DSServerOperId",
+      "@3DSTransId",
+      "@3DSUrl",
+      "@3DSSRefNumber",
+      "@AcquirerBin",
+      "@AcsOperatorId",
+      "@AcsRefNumber",
+      "@Amount",
+      "@CardholderIpAddress",
+      "@Currency",
+      "@DeviceChannel",
+      "@DsTransId",
+      "@Eci",
+      "@FinalStatus",
+      "@Issuer",
+      "@MerchantCountryName",
+      "@MerchantId",
+      "@MerchantName",
+      "@MerchantUrl",
+      "@MessageCategory",
+      "@MessageVersion",
+      "@PanBin",
+      "@PanLast4",
+      "@PaymentSystemName",
+      "@Protocol",
+      "@RecordId",
+      "@RequestorId",
+      "@RequestorName",
+      "@Service",
+      "@TransactionDate",
+      "@TransactionStatusCode",
+      "@TransactionStatusReasonCode",
+      "@TransactionTime"
+    ]
+  }
+]
+
 
 };
 
@@ -1074,7 +1152,7 @@ export default function App() {
   const [searchTop, setSearchTop] = useState("");
   const [searchFields, setSearchFields] = useState("");
 
-  const menuOptions = ["Autorização", "Liquidação", "Standin", "Advice"];
+  const menuOptions = ["Autorização", "Liquidação", "Standin", "Advice","HubQRCode","3DS-Autenticação"];
 
   const handleCopy = (text) => navigator.clipboard.writeText(text);
 
