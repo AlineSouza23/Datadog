@@ -246,7 +246,7 @@ Autorização: [
     "@indicadorTokenizacaoCpfBit104","@indicadorTokenizacaoCnpjBit104",
     "@indicadorTokenizacaoRazaoSocial","@indicadorTransacaoAfe","@transacaoInternacional",
     "@indicadorBinTamanhoSeis","@tipoFinanciamentoTransacao","@idAutorizacaoTransacao",
-    "@idChaveHsm","@razaoSocialEstComercial","@site"
+    "@idChaveHsm","@razaoSocialEstComercial","@site","@classificacaoTransacao","@tipoCartao","@tipoProduto"
   ]},
 
   { grupo: "dadosComplementaresPulse", itens: [
