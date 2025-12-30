@@ -110,7 +110,7 @@ Autorização: [
   ]},
 
   { grupo: "BIT48", itens: [
-    "@Bit48CNPJ","@Bit48codigoProduto","@Bit48Marca","@Bit48Produto","@Bit48quemResponde"
+    "@Bit48CNPJ","@Bit48codigoProduto","@Bit48Marca","@Bit48Produto","@Bit48quemResponde","@Bit48produtoDigital","@Bit48carteiraDigital","@Bit48codigoCarteiraDigital"
   ]},
 
   { grupo: "BIT49", itens: ["@Bit49codigoMoeda"] },
