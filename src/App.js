@@ -7,6 +7,9 @@ const logPaths = {
   Advice: "service:standin-consumidor-advice \"TRANSACAO PERSISTIDA COM SUCESSO \" env:prd ",
   HubQRCode: "service:qr-code-v2-kafka-parser-mensageria env:prd ",
   "3DS-Autenticação":"service:rpa env:prd",
+  Lyra:"service:lyra-kafka-parser-mensageria env:prd",
+  TE40:"service:liquidacao-fraude-kafka-parser-mensageria env:prd",
+  SimSwap:"service:simswap-kafka-parser-mensageria env:prd ",
 };
 
 const campos = {
@@ -91,7 +94,7 @@ Autorização: [
   { grupo: "BIT42", itens: ["@Bit42mid"] },
 
   { grupo: "BIT43", itens: [
-    "@Bit43Estabelecimento","@Bit43codigoPais","@Bit43Cidade","@Bit43Pais"
+    "@Bit43Estabelecimento","@Bit43codigoPais","@Bit43Cidade","@Bit43Pais","@bit43","@Bit43abrangencia"
   ]},
 
   { grupo: "BIT46", itens: [
@@ -124,6 +127,7 @@ Autorização: [
   { grupo: "BIT54", itens: [
     "@Bit54tipoConta","@Bit54tipoValor","@Bit54codigoMoeda","@Bit54indicativoPlataforma","@Bit54valor"
   ]},
+  { grupo: "BIT55", itens: ["@Bit55","@bit55Tag9F02","@bit55Tag9F03","@bit55Tag9F1A","@bit55Tag5F2A","@bit55Tag9F37","@bit55Tag9F33","@bit55Tag9F34","@bit55Tag9F35","@bit55Tag9F36","@bit55Tag9F10","@bit55Tag9F26","@bit55Tag9F27","@bit55Tag9F6E","@bit55Tag9F06","@bit55Tag9F1E","@bit55Tag9F09","@bit55Tag9F41","@bit55Tag9F07","@bit55Tag9F5B","@bit55Tag9A","@bit55Tag9C","@bit55Tag71","@bit55Tag72","@bit55Tag84","@bit55Tag82","@bit55Tag91","@bit55Tag95"] },
 
   { grupo: "BIT56", itens: ["@Bit56dadosPortador"] },
 
@@ -246,7 +250,7 @@ Autorização: [
     "@indicadorTokenizacaoCpfBit104","@indicadorTokenizacaoCnpjBit104",
     "@indicadorTokenizacaoRazaoSocial","@indicadorTransacaoAfe","@transacaoInternacional",
     "@indicadorBinTamanhoSeis","@tipoFinanciamentoTransacao","@idAutorizacaoTransacao",
-    "@idChaveHsm","@razaoSocialEstComercial","@site","@classificacaoTransacao","@tipoCartao","@tipoProduto"
+    "@idChaveHsm","@razaoSocialEstComercial","@site","@classificacaoTransacao","@tipoCartao","@tipoProduto","@metricaTransacao","@bin6"
   ]},
 
   { grupo: "dadosComplementaresPulse", itens: [
@@ -1142,17 +1146,171 @@ HubQRCode: [
       "@TransactionTime"
     ]
   }
-]
 
+  ],
+"Lyra": [
+  {
+    "grupo": "Lyra",
+    "itens": [
+      "@accountRiskData.accountId",
+      "@accountRiskData.accountScore",
+      "@accountRiskData.address",
+      "@accountRiskData.zip",
 
-};
+      "@bin",
+      "@cardReferenceId",
+      "@createdAt",
+
+      "@deviceRiskData.color",
+      "@deviceRiskData.deviceID",
+      "@deviceRiskData.deviceScore",
+      "@deviceRiskData.deviceType",
+      "@deviceRiskData.fullDeviceNumber",
+      "@deviceRiskData.ipv4",
+      "@deviceRiskData.name",
+      "@deviceRiskData.osType",
+      "@deviceRiskData.phoneNumberScore",
+      "@deviceRiskData.SEID",
+
+      "@Emissor",
+      "@hostname",
+      "@issuerId",
+      "@nomeRegra",
+      "@panHased",
+      "@requestId",
+
+      "@response.responseID",
+      "@response.riskEvalID",
+
+      "@riskEval.advice",
+      "@riskEval.ruleDescription",
+      "@riskEval.ruleId",
+
+      "@schemeId",
+      "@sender",
+      "@service",
+      "@tokenRequestorId",
+      "@Wallet",
+
+      "@walletRiskData.cardInputMethod",
+      "@walletRiskData.flowAlgorithmVersion"
+    
+
+ ]
+    }
+  ],
+  "TE40": [
+    {
+      grupo: "Registro00",
+      itens: [
+        "@codigoBandeira",
+        "@codigoBandeiraAdicional",
+        "@codigoCredenciador",
+        "@codigoEmissor",
+        "@codigoProcessadora",
+        "@credenciador",
+        "@dadosAdicionais.codigoRastreioCicloVidaTransacao",
+        "@dadosAdicionais.flagCartaoPresente",
+        "@dadosAdicionais.indicadorRota",
+        "@dadosAdicionais.kafkaUID",
+        "@dadosLiquidacao.dadosRemessa.remessas.dataReferenciaMovimento",
+        "@dadosLiquidacao.dadosRemessa.remessas.numeroRemessa",
+        "@dadosLiquidacao.dadosRemessa.remessas.origem",
+        "@dadosLiquidacao.dadosRemessa.remessas.plataforma",
+        "@dadosLiquidacao.dadosRemessa.remessas.versaoArquivoMensageria",
+        "@dadosLiquidacao.participantes.codigo",
+        "@dadosLiquidacao.participantes.razaoSocial",
+        "@dadosLiquidacao.participantes.tipoParticipante",
+        "@date",
+        "@Emissor",
+        "@hostname",
+        "@mcc",
+        "@modoEntrada",
+        "@notificacao",
+        "@plataforma",
+        "@registroFraude00.bancoEmissor",
+        "@registroFraude00.cidadePontoVenda",
+        "@registroFraude00.codigoBandeira",
+        "@registroFraude00.codigoCredenciador",
+        "@registroFraude00.codigoErro",
+        "@registroFraude00.codigoMoedaTransacaoFraudulenta",
+        "@registroFraude00.codigoNotificacao",
+        "@registroFraude00.codigoPaisPontoVenda",
+        "@registroFraude00.codigoPontoVenda",
+        "@registroFraude00.codigoTransacao",
+        "@registroFraude00.complementoNumeroCartao",
+        "@registroFraude00.dataNotificacaoFraude",
+        "@registroFraude00.dataVencimentoCartao",
+        "@registroFraude00.dataVenda",
+        "@registroFraude00.idReferenciaBandeira",
+        "@registroFraude00.indicadorOrigemAutorizacao",
+        "@registroFraude00.mccPontoVenda",
+        "@registroFraude00.numeroCartao",
+        "@registroFraude00.numeroReferenciaTransacao",
+        "@registroFraude00.subCodigoTransacao",
+        "@registroFraude00.tipoFraude",
+        "@registroFraude00.tipoPlataforma",
+        "@registroFraude00.valorFraude",
+        "@remessaCredenciador",
+        "@remessaEmissor",
+        "@sequencial",
+        "@service"
+      ]
+    },
+    {
+      grupo: "Registro02",
+      itens: [
+        "@registroFraude02.cepPortador",
+        "@registroFraude02.cidadePortador",
+        "@registroFraude02.codigoAutorizacaoTransacao",
+        "@registroFraude02.codigoTransacao",
+        "@registroFraude02.dataConfirmacaoFraude",
+        "@registroFraude02.identificacaoTecnologiaTerminal",
+        "@registroFraude02.identificadorTransacao",
+        "@registroFraude02.indicadorLiquidacao",
+        "@registroFraude02.indicadorTransacaoRealizada",
+        "@registroFraude02.indicadorTransacaoTroco",
+        "@registroFraude02.meioIdentificacaoPortador",
+        "@registroFraude02.modoEntradaTransacaoPos",
+        "@registroFraude02.nomePortador",
+        "@registroFraude02.numeroLogicoEquipamento",
+        "@registroFraude02.pontoVenda",
+        "@registroFraude02.subCodigoTransacao",
+        "@registroFraude02.tecnologiaCartao",
+        "@registroFraude02.tokenPan",
+        "@registroFraude02.ufPortador",
+      "@registroFraude02.valorTroco"
+    ]
+  }
+],
+
+"SimSwap": [
+  {
+    grupo: "SimSwap",
+    itens: [
+      "@Aplicacao",
+      "@Error",
+      "@Hostname",
+      "@IdentificadorAplicacao",
+      "@IdentificadorBancoDeDados",
+      "@IdentificadorRequisicao",
+      "@NivelRiscoFraude",
+      "@NumeroTelefone",
+      "@Operadora",
+      "@PontuacaoDispositivoScore",
+      "@service",
+      "@Tag",
+      "@TagDescricao"
+    ]
+  }
+],}
 
 export default function App() {
   const [selected, setSelected] = useState(null);
   const [searchTop, setSearchTop] = useState("");
   const [searchFields, setSearchFields] = useState("");
 
-  const menuOptions = ["Autorização", "Liquidação", "Standin", "Advice","HubQRCode","3DS-Autenticação"];
+  const menuOptions = ["Autorização", "Liquidação", "Standin", "Advice","HubQRCode","3DS-Autenticação","Lyra","TE40","SimSwap"];
 
   const handleCopy = (text) => navigator.clipboard.writeText(text);
 
