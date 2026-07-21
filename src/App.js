@@ -1078,18 +1078,6 @@ export default function App() {
     setSelected(null);
   };
 
-  const handleResetarDados = () => {
-    if (window.confirm("Tem certeza que deseja resetar todos os dados para o padrão original?")) {
-      localStorage.removeItem("campos_dd_services");
-      localStorage.removeItem("campos_dd_logpaths");
-      localStorage.removeItem("campos_dd_campos");
-      setServicesState(menuOptions);
-      setLogPathsState(logPaths);
-      setCamposState(campos);
-      setSelected(null);
-    }
-  };
-
   const openEditService = (name, e) => {
     e && e.stopPropagation();
     setEditServiceModal(name);
