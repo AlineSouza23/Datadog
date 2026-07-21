@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "./firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 const logPaths = {
   Autorização: "service:autorizacao-kafka-parser-mensageria AVRO env:prd",
@@ -1012,36 +1014,44 @@ export default function App() {
   const [loginPass, setLoginPass] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  // ---- Dados editáveis com persistência em localStorage ----
-  const [servicesState, setServicesState] = useState(() => {
-    try {
-      const saved = localStorage.getItem("campos_dd_services");
-      return saved ? JSON.parse(saved) : menuOptions;
-    } catch { return menuOptions; }
-  });
-  const [logPathsState, setLogPathsState] = useState(() => {
-    try {
-      const saved = localStorage.getItem("campos_dd_logpaths");
-      return saved ? JSON.parse(saved) : logPaths;
-    } catch { return logPaths; }
-  });
-  const [camposState, setCamposState] = useState(() => {
-    try {
-      const saved = localStorage.getItem("campos_dd_campos");
-      return saved ? JSON.parse(saved) : campos;
-    } catch { return campos; }
-  });
+  // ---- Dados editáveis com persistência no Firebase ----
+  const [servicesState, setServicesState] = useState(menuOptions);
+  const [logPathsState, setLogPathsState] = useState(logPaths);
+  const [camposState, setCamposState] = useState(campos);
+  const [carregando, setCarregando] = useState(true);
 
-  // ---- Salva no localStorage sempre que os dados mudam ----
-  React.useEffect(() => {
-    try { localStorage.setItem("campos_dd_services", JSON.stringify(servicesState)); } catch {}
-  }, [servicesState]);
-  React.useEffect(() => {
-    try { localStorage.setItem("campos_dd_logpaths", JSON.stringify(logPathsState)); } catch {}
-  }, [logPathsState]);
-  React.useEffect(() => {
-    try { localStorage.setItem("campos_dd_campos", JSON.stringify(camposState)); } catch {}
-  }, [camposState]);
+  // Carrega dados do Firebase ao iniciar
+  useEffect(() => {
+    const carregar = async () => {
+      try {
+        const snap = await getDoc(doc(db, "config", "dados"));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data.services) setServicesState(data.services);
+          if (data.logPaths) setLogPathsState(data.logPaths);
+          if (data.campos) setCamposState(data.campos);
+        }
+      } catch (e) {
+        console.error("Erro ao carregar dados:", e);
+      } finally {
+        setCarregando(false);
+      }
+    };
+    carregar();
+  }, []);
+
+  // Salva no Firebase
+  const salvarNoFirebase = async (services, logPathsData, camposData) => {
+    try {
+      await setDoc(doc(db, "config", "dados"), {
+        services,
+        logPaths: logPathsData,
+        campos: camposData,
+      });
+    } catch (e) {
+      console.error("Erro ao salvar:", e);
+    }
+  };
 
   // ---- Modais de edição/adição de serviço ----
   const [editServiceModal, setEditServiceModal] = useState(null);
@@ -1073,7 +1083,8 @@ export default function App() {
     }
   };
 
-  const handleSalvar = () => {
+  const handleSalvar = async () => {
+    await salvarNoFirebase(servicesState, logPathsState, camposState);
     setIsLoggedIn(false);
     setSelected(null);
   };
@@ -1189,6 +1200,14 @@ export default function App() {
   );
 
   const headerTitle = view === "campos" ? "Pesquisa de Campos" : view === "emissores" ? "Emissores" : "Como usar o Datadog";
+
+  if (carregando) {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(90deg, rgb(47, 71, 190), rgb(186, 106, 228))" }}>
+        <p style={{ color: "white", fontSize: "20px", fontWeight: "bold" }}>Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: "100vh", background: "white", color: "#5c2d91", fontFamily: "Arial, sans-serif" }}>
