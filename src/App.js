@@ -1403,6 +1403,16 @@ export default function App() {
                 )}
                 {filteredMenu.length === 0 && <p style={{ color: "#5c2d91", fontWeight: "bold" }}>Nenhum resultado encontrado</p>}
               </div>
+              {isLoggedIn && (
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
+                  <button
+                    onClick={(e) => { buttonClickAnimation(e); handleSalvar(); }}
+                    style={{ ...gradientBtn, background: "linear-gradient(90deg, #16a34a, #22c55e)", fontSize: "16px", padding: "14px 40px" }}
+                  >
+                    💾 Salvar alterações
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
